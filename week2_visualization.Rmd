@@ -1,0 +1,70 @@
+---
+output:
+  word_document: default
+  html_document: default
+---
+```{r setup, include=FALSE}
+library(tidyverse)
+library(palmerpenguins)
+```
+### 1. Scatter Plot: Flipper Length vs Body Mass
+
+This scatter plot examines the relationship between a penguin's flipper length and its body mass, categorized by species. It helps us understand whether larger penguins have longer flippers across different breeds.
+```
+```{r scatter-plot, echo=TRUE}
+ggplot(penguins, aes(x = flipper_length_mm, y = body_mass_g, color = species)) +
+  geom_point(size = 3, alpha = 0.8) +
+  labs(
+    title = "Flipper Length vs Body Mass by Penguin Species",
+    x = "Flipper Length (mm)",
+    y = "Body Mass (g)",
+    color = "Species"
+  ) +
+  theme_minimal()
+```
+### 2. Histogram: Distribution of Body Mass
+
+This histogram shows the frequency distribution of penguin body masses, helping us understand the common weight ranges across the dataset.
+
+```{r histogram, echo=TRUE}
+ggplot(penguins, aes(x = body_mass_g, fill = species)) +
+  geom_histogram(bins = 20, alpha = 0.7, position = "identity") +
+  labs(
+    title = "Distribution of Penguin Body Mass",
+    x = "Body Mass (g)",
+    y = "Count",
+    fill = "Species"
+  ) +
+  theme_minimal()
+```
+### 3. Bar Chart: Penguin Count by Island
+
+This bar chart displays the distribution and count of penguin species across different islands in the Palmer Archipelago.
+
+```{r bar-chart, echo=TRUE}
+ggplot(penguins, aes(x = island, fill = species)) +
+  geom_bar(position = "dodge") +
+  labs(
+    title = "Penguin Count by Island and Species",
+    x = "Island",
+    y = "Count",
+    fill = "Species"
+  ) +
+  theme_minimal()
+```
+### 4. Box Plot: Bill Length Distribution by Species
+
+This box plot compares the distribution of bill lengths across the three penguin species, highlighting median values and potential outliers.
+
+```{r box-plot, echo=TRUE}
+ggplot(penguins, aes(x = species, y = bill_length_mm, fill = species)) +
+  geom_boxplot(alpha = 0.7) +
+  labs(
+    title = "Bill Length Distribution by Species",
+    x = "Species",
+    y = "Bill Length (mm)",
+    fill = "Species"
+  ) +
+  theme_minimal()
+```
+  
