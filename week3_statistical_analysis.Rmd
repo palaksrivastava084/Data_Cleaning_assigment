@@ -1,0 +1,48 @@
+---
+title: "Task 3: Statistical Analysis and Predictive Modeling"
+author: "Palak Srivastava"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+# 1. Dataset Identification and Rationale
+
+We use the built-in `mtcars` dataset in R. 
+**Rationale:** The `mtcars` dataset is clean, structured, and ideal for predictive modeling. We aim to predict car fuel efficiency (`mpg` - Miles Per Gallon) using predictor variables such as vehicle weight (`wt`) and horsepower (`hp`). This allows us to apply multiple linear regression effectively.
+
+```{r load-data}
+# Load dataset and view first few rows
+data(mtcars)
+head(mtcars)
+
+# Summary statistics for selected variables
+summary(mtcars[, c("mpg", "wt", "hp")])
+
+# Correlation matrix
+cor(mtcars[, c("mpg", "wt", "hp")])
+
+# Normality test (Shapiro-Wilk test on mpg)
+shapiro.test(mtcars$mpg)
+
+set.seed(123)
+
+# Train/Test Split
+train_index <- sample(1:nrow(mtcars), 0.8 * nrow(mtcars))
+train_data <- mtcars[train_index, ]
+test_data <- mtcars[-train_index, ]
+
+# Fit Multiple Linear Regression Model
+model <- lm(mpg ~ wt + hp, data = train_data)
+summary(model)
+
+# Diagnostic plots for residuals
+par(mfrow = c(2, 2))
+plot(model)
+par(mfrow = c(1, 1))
+
+# Predictions on test data
+predictions <- predict(model, newdata = test_data)
+
+# Calculate RMSE
+rmse <- sqrt(mean((test_data$mpg - predictions)^2))
+print(paste("Test RMSE:", rmse))
