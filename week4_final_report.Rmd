@@ -1,0 +1,57 @@
+---
+title: "Comprehensive Data Analysis and Predictive Modeling Report"
+author: "Palak Srivastava"
+date: "`r Sys.Date()`"
+output: word_document
+---
+
+# 1. Introduction & Executive Summary
+This final report integrates our complete data pipeline—spanning data cleaning, exploratory data visualization, and predictive modeling. Using the benchmark `mtcars` dataset, our objective is to analyze vehicle characteristics, uncover underlying trends, and build a robust regression model to predict fuel efficiency (`mpg`).
+
+# 2. Data Preparation & Cleaning (Task 1 Integration)
+In this phase, we inspect the dataset for missing values, verify data types, and structure the data to ensure high analytical integrity.
+
+```{r data-cleaning}
+# Load dataset
+data(mtcars)
+
+# Check for missing values in the dataset
+sum(is.na(mtcars))
+
+# Structure of the cleaned dataset
+str(mtcars)
+
+# Summary of clean data
+summary(mtcars[, c("mpg", "wt", "hp", "cyl")])
+library(ggplot2)
+
+# Scatter plot with regression line showing weight vs mpg
+ggplot(mtcars, aes(x = wt, y = mpg, color = factor(cyl))) +
+  geom_point(size = 3) +
+  geom_smooth(method = "lm", se = FALSE) +
+  labs(title = "Fuel Efficiency vs. Vehicle Weight",
+       subtitle = "Categorized by Cylinder Count",
+       x = "Weight (1000 lbs)",
+       y = "Miles Per Gallon (mpg)",
+       color = "Cylinders") +
+  theme_minimal()
+# Reproducibility
+set.seed(123)
+
+# Train/Test Split
+train_index <- sample(1:nrow(mtcars), 0.8 * nrow(mtcars))
+train_data <- mtcars[train_index, ]
+test_data <- mtcars[-train_index, ]
+
+# Fit Multiple Linear Regression Model
+model <- lm(mpg ~ wt + hp, data = train_data)
+summary(model)
+# Diagnostic Plots
+par(mfrow = c(2, 2))
+plot(model)
+par(mfrow = c(1, 1))
+
+# Evaluate RMSE on Test Data
+predictions <- predict(model, newdata = test_data)
+rmse <- sqrt(mean((test_data$mpg - predictions)^2))
+print(paste("Test RMSE:", rmse))
